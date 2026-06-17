@@ -3,12 +3,14 @@ const app = express();
 
 function isNatural(val) {
   if (val === undefined || val === null || val === '') return false;
-  const num = Number(val);
-  return Number.isInteger(num) && num >= 1;
+  if (typeof val !== 'string') return false;
+  if (!/^[0-9]+$/.test(val)) return false;
+  const num = BigInt(val);
+  return num >= 1n;
 }
 
 function gcd(a, b) {
-  while (b !== 0) {
+  while (b !== 0n) {
     [a, b] = [b, a % b];
   }
   return a;
@@ -26,9 +28,9 @@ app.get('*', (req, res) => {
     return res.send('NaN');
   }
 
-  const result = lcm(Number(x), Number(y));
+  const result = lcm(BigInt(x), BigInt(y));
   res.set('Content-Type', 'text/plain');
-  res.send(String(result));
+  res.send(result.toString());
 });
 
 // For local development
